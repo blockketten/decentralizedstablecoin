@@ -12,7 +12,7 @@ contract HelperConfig is Script {
         address wbtcUsdPriceFeed;
         address weth;
         address wbtc;
-        uint256 deployerKey;
+        string keystoreAccount;
     }
     uint8 public constant DECIMALS = 8;
     int256 public constant ETH_USD_PRICE = 2000e8;
@@ -39,7 +39,7 @@ contract HelperConfig is Script {
             wbtcUsdPriceFeed: 0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43,
             weth: 0xdd13E55209Fd76AfE204dBda4007C227904f0a81,
             wbtc: 0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063,
-            deployerKey: vm.envUint("PRIVATE_KEY")
+            keystoreAccount: vm.envString("ACCOUNT")
         });
     }
 
@@ -73,7 +73,7 @@ contract HelperConfig is Script {
             weth: address(wethMock),
             wbtcUsdPriceFeed: address(btcUsdPriceFeed),
             wbtc: address(wbtcMock),
-            deployerKey: DEFAULT_ANVIL_PRIVATE_KEY
+            keystoreAccount: "anvil"
         });
     }
 }
