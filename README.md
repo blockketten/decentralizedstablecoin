@@ -47,7 +47,7 @@ These instructions will help you set up the project on your local machine for de
 Clone the repository and install the necessary dependencies:
 
 ```bash
-git clone https://github.com/yourusername/DecentralizedStablecoin.git
+git clone https://github.com/blockketten/DecentralizedStablecoin.git
 cd DecentralizedStablecoin
 make install
 ```
