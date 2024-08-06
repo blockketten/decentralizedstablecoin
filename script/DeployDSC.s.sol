@@ -1,14 +1,8 @@
 // SPDX-License-Identifier: MIT
-// This specifies the software license for the contract, indicating that it is open source
-// under the MIT license.
 
 pragma solidity ^0.8.18;
-// This declares the version of the Solidity compiler that the contract is written for, ensuring
-// compatibility with features and syntax from Solidity 0.8.18 onwards.
 
 import {Script, console} from "forge-std/Script.sol";
-// Importing the 'Script' library from Forge's standard library. The 'Script' provides
-// helpful functions and modifiers for executing deployment and testing scripts.
 
 import {DecentralizedStableCoin} from "../src/DecentralizedStableCoin.sol";
 // Importing the 'DecentralizedStableCoin' contract from the source directory, which will be
@@ -19,8 +13,6 @@ import {DSCEngine} from "../src/DSCEngine.sol";
 // logic and management layer for the Decentralized Stable Coin system.
 
 import {HelperConfig} from "./HelperConfig.s.sol";
-// Importing 'HelperConfig', a script that likely provides configuration for different network
-// environments such as addresses of price feeds and tokens.
 
 // Definition of the 'DeployDSC' contract, which extends the 'Script' contract.
 // This contract is responsible for deploying the Decentralized Stable Coin system.
@@ -48,8 +40,7 @@ contract DeployDSC is Script {
             address wethUsdPriceFeed,
             address wbtcUsdPriceFeed,
             address weth,
-            address wbtc,
-            string memory keystoreAccount
+            address wbtc
         ) = helperConfig.activeNetworkConfig();
 
         // Store the token addresses (WETH, WBTC) in the 'tokenAddresses' array.
@@ -62,7 +53,19 @@ contract DeployDSC is Script {
         vm.startBroadcast();
 
         DecentralizedStableCoin dsc = new DecentralizedStableCoin();
-        dsc.transferOwnership(msg.sender); // Ensure the deploying account is the owner
+
+        console.log("Chain being deployed on is", block.chainid);
+        console.log(
+            "Token addresses are:",
+            tokenAddresses[0],
+            tokenAddresses[1]
+        );
+        console.log(
+            "Price feed addresses are:",
+            priceFeedAddresses[0],
+            priceFeedAddresses[1]
+        );
+
         console.log("DecentralizedStableCoin deployed at:", address(dsc));
         console.log("Current owner of DSC:", dsc.owner());
 
@@ -83,16 +86,13 @@ contract DeployDSC is Script {
 
         // Transfer the ownership of the DecentralizedStableCoin contract to the DSCEngine contract.
         // This allows DSCEngine to manage and control the stable coin.
-        dsc.transferOwnership(address(engine));
-        // Pause for another 15 seconds
-        vm.sleep(15);
-
         console.log("Current owner of DSC before transfer:", dsc.owner());
         console.log("Address attempting to transfer ownership:", msg.sender);
+        dsc.transferOwnership(address(engine));
 
-        // Transfer ownership of DSC to DSCEngine
-        //dsc.transferOwnership(address(engine));
-        console.log("Ownership of DSC transferred to DSCEngine");
+        console.log("Ownership of DSC transferred to:", dsc.owner());
+        // Pause for another 15 seconds
+        vm.sleep(15);
 
         // Stop broadcasting transactions. This signifies the end of the deployment process.
         vm.stopBroadcast();

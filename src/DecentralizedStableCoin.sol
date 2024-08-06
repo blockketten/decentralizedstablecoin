@@ -5,7 +5,6 @@ import {ERC20Burnable, ERC20} from "@openzeppelin/contracts/token/ERC20/extensio
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 /** @title DecentralizedStableCoin
- * @author William Bailey
  * This contract is a decentralized stable coin that is pegged to the US dollar.
  * Collateral: Exogenous (ETH & BTC)
  * Minting: Algorithmic

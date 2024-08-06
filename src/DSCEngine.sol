@@ -9,7 +9,6 @@ import {OracleLib} from "./libraries/OracleLib.sol";
 
 /**
  * @title DSCEngine
- * @author William Bailey
  * The system is designed to be as minimal as possible, and have the tokens maintain a 1:1 peg with the US dollar.
  * The stable coin has exogenous collateral in the form of ETH and BTC, is dollar pegged, and algorithmically stable.
  * It is similar to DAI, if DAI had no governance, no fees, and was only backed by wETH and wBTC.
@@ -231,7 +230,6 @@ contract DSCEngine is ReentrancyGuard {
      * @notice follows CEI - Check, Effects, Interact pattern
      * @param amountDscToMint The amount of stablecoin tokens to be minted
      * @notice Minted stablecoins must have more collateral value than the threshold collateralization ratio
-     *
      *
      */
 

@@ -40,7 +40,7 @@ contract DSCEngineTest is Test {
     function setUp() public {
         deployer = new DeployDSC();
         (dsc, dsce, helperConfig) = deployer.run();
-        (ethUsdPriceFeed, , weth, , ) = helperConfig.activeNetworkConfig();
+        (ethUsdPriceFeed, , weth, ) = helperConfig.activeNetworkConfig();
 
         ERC20Mock(weth).mint(USER, STARTING_ERC20_BALANCE);
     }
@@ -166,6 +166,38 @@ contract DSCEngineTest is Test {
                       HEALTH FACTOR FUNCTION TESTS
     //////////////////////////////////////////////////////////////*/
 
+    function testCalculateHealthFactor() public view {
+        // Test with various collateral and debt values
+        assertEq(
+            dsce.calculateHealthFactor(50 ether, 100 ether),
+            1 ether,
+            "Health factor should be 1 for 200% collateralization"
+        );
+        assertEq(
+            dsce.calculateHealthFactor(50 ether, 200 ether),
+            2 ether,
+            "Health factor should be 2 for 400% collateralization"
+        );
+        assertEq(
+            dsce.calculateHealthFactor(50 ether, 50 ether),
+            0.5 ether,
+            "Health factor should be 0.5 for 100% collateralization"
+        );
+        // Test with zero debt
+        assertEq(
+            dsce.calculateHealthFactor(0, 100 ether),
+            type(uint256).max,
+            "Health factor should be max for zero debt"
+        );
+
+        // Test with zero collateral
+        assertEq(
+            dsce.calculateHealthFactor(100 ether, 0),
+            0,
+            "Health factor should be 0 for zero collateral"
+        );
+    }
+
     /*//////////////////////////////////////////////////////////////
                        LIQUIDATION FUNCTION TESTS
     //////////////////////////////////////////////////////////////*/
@@ -173,4 +205,12 @@ contract DSCEngineTest is Test {
     /*//////////////////////////////////////////////////////////////
                           VIEW FUNCTION TESTS
     //////////////////////////////////////////////////////////////*/
+    function testGetterFunctions() public view {
+        assertEq(dsce.getAdditionalFeedPrecision(), 1e10);
+        assertEq(dsce.getPrecision(), 1e18);
+        assertEq(dsce.getLiquidationThreshold(), 50);
+        assertEq(dsce.getLiquidationBonus(), 10);
+        assertEq(dsce.getMinHealthFactor(), 1e18);
+        assertEq(dsce.getDsc(), address(dsc));
+    }
 }
